@@ -1,0 +1,67 @@
+<div class="container">
+    <h1 class="mb-4">Question</h1>
+    <div class="container">
+        <h3>{{this.question.title}}</h3>
+        <p class="mb-4" style="font-size: 12px;"><span>Asked {{this.question.date}}</span> by <span style="font-weight: bold;">{{this.question.username}}</span></p>
+        <p style="margin-bottom: 100px;">{{this.question.description}}</p>
+
+        <form action="/questions/questions/{{this.question._id}}" method="post" class="mt-5">
+            <div class="form-group">
+                <label for="description">Add an answer:</label>
+                <input type="text" id="description" name="description" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-dark" style="float: right;">Submit</button>
+        </form>
+    </div>
+
+    <h2 class="mt-5">Answers</h2>
+    <div class="container">
+        <div class="mt-4">
+            <h4 class="mb-2">Top answer</h4>
+            <div class="top-answer mb-5"></div>
+
+            {{#each this.answers}}
+                <div class="card mb-3">
+                    <div class="card-body">
+
+                        {{#if ../condition}}
+                            <label class="radio-label">
+                                <input type="radio" name="myRadioGroup">
+                                <span class="radio-button"></span>
+                            </label>
+                        {{/if}}
+
+                        <p class="card-text">{{this.description}}</p>
+                        <p class="card-text"><small class="text-muted">Answered {{this.date}} by <strong>{{this.username}}</strong></small></p>
+                    </div>
+                </div>
+            {{/each}}
+        </div>
+
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var radioButtons = document.querySelectorAll('input[type="radio"]');
+        radioButtons.forEach(function(radioButton) {
+            radioButton.addEventListener('change', function(event) {
+                var checkedAnswer = event.target.closest('.card');
+                var topAnswerDiv = document.querySelector('.top-answer');
+                
+                topAnswerDiv.innerHTML = '';
+                topAnswerDiv.appendChild(checkedAnswer.cloneNode(true));
+
+                var questionId = "{{question._id}}";
+                fetch('/questions/questions/' + questionId + '/sortAnswers', {
+                    method: 'GET',
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.querySelector('.answers-section').innerHTML = data.sortedAnswersHtml;
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
+    });
+</script>

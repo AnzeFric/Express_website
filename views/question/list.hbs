@@ -1,0 +1,18 @@
+<div class="container">
+    <h1 class="mb-4">Questions</h1>
+
+    <div class="container">
+        {{#each questions}}
+        <div class="mb-4">
+            <h3>{{this.title}}</h3>
+            <p class="mb-1" style="font-size: 12px;"><span style="font-weight: bold;">{{this.postedBy.username}}</span>
+                asked <span>{{this.date}}</span></p>
+            <p>{{this.description}}</p>
+            <div class="clearfix">
+                <a href="/questions/questions/{{this._id}}" class="btn btn-dark">Read more</a>
+            </div>
+            <hr>
+        </div>
+        {{/each}}
+    </div>
+</div>
